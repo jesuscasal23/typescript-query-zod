@@ -1,0 +1,46 @@
+//////////  preparation questions //////////
+1. is it posible? 
+2. is it realistic?
+3 should we be concerned? 
+
+
+////// typescript cannot know the type of an api response //////
+
+///// we have to use Type Casting (which we should avoid) /////
+type Todos = {
+  todos: {
+    id: number;
+    title: string;
+    completed: boolean;
+  }[];
+}
+3. what if we are wrong (api changes) ? 
+
+Zod (typescript validator)
+1. we can validate. 
+import { z } from 'zod'
+const todosSchema = z.object({
+  todos: z.array(
+    z.object({
+      id: z.string(),
+      text: z.string(),
+      description: z.string(),
+    })
+  ),
+})
+todosSchema.parse(data)
+2. We can create a type based on the validator and return it
+type Todos = z.infer<typeof todosSchema>
+
+still have one problem:
+6. but we dont want the app to crash if the api changes
+https://zod.dev/?id=safeparse
+
+7. we show an error message to the developer (console.error)
+
+
+resources:
+ - https://blog.logrocket.com/understanding-discriminated-union-intersection-types-typescript/#discriminated-union
+ - https://tkdodo.eu/blog/type-safe-react-query
+ - https://github.com/react-hook-form/resolvers#zod
+ - https://www.reddit.com/r/reactjs/comments/u8hw41/in_reacttypescript_app_do_you_validate_the_data/
